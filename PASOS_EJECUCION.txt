@@ -1,0 +1,189 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                     🚀 WA-SENDER - PASOS DE EJECUCIÓN 🚀                  ║
+║                                                                            ║
+║                    Sistema 100% Funcional - Listo Para Usar               ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 1: CLONAR REPOSITORIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  $ git clone https://github.com/nametechdevz/wa-pro.git
+  $ cd wa-pro
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 2: INSTALAR DEPENDENCIAS (Solo la primera vez)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  $ npm install
+
+  ⏳ Esto puede tardar 2-5 minutos
+  ✅ Se crearán todas las dependencias necesarias
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 3: INICIAR LA APLICACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  $ npm run dev
+
+  ✅ Esto abrirá automáticamente:
+     - React en http://localhost:3000
+     - Electron (tu app de escritorio)
+     - La ventana principal de la aplicación
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 4: CONECTAR WHATSAPP (Primera vez)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Cuando se abra la app:
+
+  1. Verás la pantalla de LOGIN con un código QR
+  2. En tu teléfono:
+     - Abre WhatsApp
+     - Toca Menú (≡) o Ajustes
+     - Selecciona "Dispositivos vinculados"
+     - Toca "Vincular dispositivo"
+  3. Con tu teléfono, ESCANEA el código QR que muestra la app
+  4. ¡Espera a que diga "Conectado exitosamente"!
+
+  ✅ Ya está lista para usar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 5: AGREGAR CONTACTOS (Opción A: Manual)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Haz clic en la pestaña "Contactos"
+  2. Rellena:
+     - Nombre: Tu nombre o nombre del contacto
+     - Teléfono: 573105280601 (formato colombiano)
+     - Grupo: Selecciona un grupo (ej: Clientes)
+  3. Haz clic en "Agregar"
+
+  ✅ El contacto se guardará automáticamente
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 5B: AGREGAR CONTACTOS (Opción B: Importar CSV/Excel)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Formato CSV:
+  ──────────────
+  nombre,telefono,grupo
+  Juan,573105280601,Clientes
+  Maria,573203814730,Clientes
+  Carlos,573145692087,Equipo
+
+  Pasos:
+  ──────────────
+  1. Prepara tu archivo CSV o XLSX
+  2. Ve a la pestaña "Contactos"
+  3. Haz clic en "Importar CSV/Excel"
+  4. Selecciona tu archivo
+  5. ¡Listo! Se importarán todos los contactos
+
+  ✅ Los duplicados se ignoran automáticamente
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 6: ENVIAR MENSAJES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Opción A: Contactos Individuales
+  ───────────────────────────────
+  1. Haz clic en "Enviar Mensajes"
+  2. Selecciona "Contactos individuales"
+  3. Pega los números (uno por línea):
+     573105280601
+     573203814730
+     573145692087
+  4. Escribe el mensaje
+  5. Configura velocidad (si quieres)
+  6. Haz clic en "Enviar Mensajes"
+
+  Opción B: Enviar a Grupos
+  ───────────────────────────
+  1. Haz clic en "Enviar Mensajes"
+  2. Selecciona "Enviar a grupos"
+  3. Marca los grupos que quieres
+  4. Escribe el mensaje
+  5. Haz clic en "Enviar Mensajes"
+
+  ✅ Verás una barra de progreso en tiempo real
+  ✅ Al terminar, te mostrará cuántos se enviaron correctamente
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 7: VER ESTADÍSTICAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Haz clic en "Configuración"
+  2. Verás:
+     - Mensajes enviados
+     - Mensajes fallidos
+     - Total de contactos
+     - Total procesado
+
+  ✅ Las estadísticas se actualizan automáticamente
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+COMPILAR PARA PRODUCCIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  $ npm run build
+
+  ✅ Se creará un instalador en /dist/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SOLUCIONAR PROBLEMAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ❌ Error: Command not found (npm)
+     → Instala Node.js desde nodejs.org
+
+  ❌ Error al instalar dependencias
+     → npm install --legacy-peer-deps
+
+  ❌ La app no inicia
+     → rm -rf node_modules && npm install && npm run dev
+
+  ❌ Base de datos corrupta
+     → Se crea automáticamente, solo reinicia
+
+  ❌ WhatsApp no conecta
+     → Asegúrate de tener WhatsApp instalado en tu teléfono
+     → Intenta escanear el QR de nuevo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CARACTERÍSTICAS PRINCIPALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✅ Envío masivo de mensajes
+  ✅ Base de datos local (SQLite)
+  ✅ Gestión de contactos
+  ✅ Importación CSV/Excel
+  ✅ Historial completo
+  ✅ Estadísticas en tiempo real
+  ✅ Interfaz moderna y responsiva
+  ✅ Configuración flexible
+  ✅ 100% funcional
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+¡LISTO PARA USAR! 🎉
+
+Más información en:
+  - README.md (documentación completa)
+  - INICIO_RAPIDO.md (quick start)
+  - FEATURES_COMPLETADAS.md (checklist)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
