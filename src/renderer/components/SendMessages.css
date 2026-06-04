@@ -41,6 +41,45 @@
   gap: 0.75rem;
 }
 
+.groups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.group-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.group-checkbox:hover {
+  background: rgba(7, 94, 84, 0.05);
+}
+
+.group-checkbox input[type='checkbox'] {
+  cursor: pointer;
+  accent-color: #075e54;
+}
+
+.empty-state {
+  color: #999;
+  text-align: center;
+  padding: 1rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
 .radio-option {
   display: flex;
   align-items: center;
@@ -188,4 +227,92 @@
 .btn-send:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.input-number {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.input-number:focus {
+  outline: none;
+  border-color: #075e54;
+  box-shadow: 0 0 0 3px rgba(7, 94, 84, 0.1);
+}
+
+.file-name {
+  color: #075e54;
+  font-weight: 500;
+}
+
+.placeholder {
+  color: #999;
+}
+
+.progress-container {
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #075e54 0%, #128c7e 100%);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.progress-text .spinner {
+  animation: spin 1s linear infinite;
+}
+
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #ffebee;
+  border: 1px solid #ef5350;
+  border-radius: 6px;
+  color: #c62828;
+  margin-bottom: 1rem;
+}
+
+.error-alert svg {
+  font-size: 1.5rem;
+}
+
+.error-alert p {
+  margin: 0;
+  font-weight: 500;
 }

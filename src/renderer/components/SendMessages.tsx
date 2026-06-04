@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FaFileUpload, FaCheck, FaExclamation } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaFileUpload, FaCheck, FaExclamation, FaSpinner } from 'react-icons/fa';
 import './SendMessages.css';
 
 interface SendFormData {
@@ -9,6 +9,14 @@ interface SendFormData {
   mediaFile?: File;
   useGroups: boolean;
   selectedGroups: string[];
+  delayBetweenMessages: number;
+  maxConcurrent: number;
+}
+
+interface SendResult {
+  successful: number;
+  failed: number;
+  results: Array<{ phone: string; name: string; success: boolean; error?: string }>;
 }
 
 const SendMessages: React.FC = () => {
@@ -18,16 +26,59 @@ const SendMessages: React.FC = () => {
     message: '',
     useGroups: false,
     selectedGroups: [],
+    delayBetweenMessages: 2000,
+    maxConcurrent: 5,
   });
 
   const [sending, setSending] = useState(false);
-  const [result, setResult] = useState<{ success: number; failed: number } | null>(null);
+  const [result, setResult] = useState<SendResult | null>(null);
+  const [progress, setProgress] = useState({ current: 0, total: 0 });
+  const [error, setError] = useState('');
+  const [contacts, setContacts] = useState<any[]>([]);
+  const [groups, setGroups] = useState<string[]>([]);
+
+  useEffect(() => {
+    loadContacts();
+    loadGroups();
+
+    const progressListener = (data: any) => {
+      setProgress(data);
+    };
+
+    window.electron.ipc.on('messages:progress', progressListener);
+
+    return () => {
+      window.electron.ipc.off('messages:progress', progressListener);
+    };
+  }, []);
+
+  const loadContacts = async () => {
+    try {
+      const result = await window.electron.ipc.invoke('contacts:get-all');
+      if (result.success) {
+        setContacts(result.data);
+      }
+    } catch (error) {
+      console.error('Error loading contacts:', error);
+    }
+  };
+
+  const loadGroups = async () => {
+    try {
+      const result = await window.electron.ipc.invoke('contacts:get-groups');
+      if (result.success) {
+        setGroups(result.data);
+      }
+    } catch (error) {
+      console.error('Error loading groups:', error);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: name === 'delayBetweenMessages' || name === 'maxConcurrent' ? parseInt(value) : value,
     }));
   };
 
@@ -41,16 +92,82 @@ const SendMessages: React.FC = () => {
     }
   };
 
+  const parseRecipients = (): Array<{ phone: string; name: string }> => {
+    const phonesText = formData.recipients
+      .split(/[\n,;]+/)
+      .map(p => p.trim())
+      .filter(p => p.length > 0);
+
+    return phonesText.map(phone => ({
+      phone: phone.replace(/\D/g, ''),
+      name: 'Contacto',
+    }));
+  };
+
+  const getRecipientsToSend = (): Array<{ phone: string; name: string }> => {
+    if (formData.useGroups && formData.selectedGroups.length > 0) {
+      const filtered = contacts.filter(c =>
+        formData.selectedGroups.includes(c.group_name)
+      );
+      return filtered.map(c => ({ phone: c.phone, name: c.name }));
+    }
+
+    if (formData.recipients.trim()) {
+      return parseRecipients();
+    }
+
+    return [];
+  };
+
   const handleSend = async () => {
-    setSending(true);
     try {
-      // TODO: Implementar lógica de envío real
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setResult({ success: 10, failed: 1 });
-      setTimeout(() => setResult(null), 5000);
+      setError('');
+      const recipients = getRecipientsToSend();
+
+      if (recipients.length === 0) {
+        setError('Por favor selecciona destinatarios');
+        return;
+      }
+
+      if (!formData.message.trim()) {
+        setError('Por favor ingresa un mensaje');
+        return;
+      }
+
+      setSending(true);
+      setProgress({ current: 0, total: recipients.length });
+
+      const result = await window.electron.ipc.invoke('messages:send-bulk', recipients, formData.message, {
+        delayBetweenMessages: formData.delayBetweenMessages,
+        maxConcurrent: formData.maxConcurrent,
+      });
+
+      if (result.success) {
+        setResult(result.data);
+        setFormData(prev => ({
+          ...prev,
+          recipients: '',
+          message: '',
+          selectedGroups: [],
+        }));
+        loadContacts();
+      } else {
+        setError(result.error || 'Error al enviar mensajes');
+      }
+    } catch (error: any) {
+      setError(error.message || 'Error desconocido');
     } finally {
       setSending(false);
     }
+  };
+
+  const toggleGroup = (group: string) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedGroups: prev.selectedGroups.includes(group)
+        ? prev.selectedGroups.filter(g => g !== group)
+        : [...prev.selectedGroups, group],
+    }));
   };
 
   return (
@@ -81,7 +198,30 @@ const SendMessages: React.FC = () => {
             </label>
           </div>
 
-          {!formData.useGroups && (
+          {formData.useGroups ? (
+            <div className="input-group">
+              <label>Selecciona grupos</label>
+              <div className="groups-list">
+                {groups.length > 0 ? (
+                  groups.map(group => (
+                    <label key={group} className="group-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={formData.selectedGroups.includes(group)}
+                        onChange={() => toggleGroup(group)}
+                      />
+                      <span>{group}</span>
+                    </label>
+                  ))
+                ) : (
+                  <p className="empty-state">No hay grupos disponibles</p>
+                )}
+              </div>
+              <small>
+                {contacts.filter(c => formData.selectedGroups.includes(c.group_name)).length} contactos seleccionados
+              </small>
+            </div>
+          ) : (
             <div className="input-group">
               <label>Números de teléfono (uno por línea o separados por comas)</label>
               <textarea
@@ -135,27 +275,82 @@ const SendMessages: React.FC = () => {
                   onChange={handleFileChange}
                   className="file-input"
                 />
-                {formData.mediaFile && (
+                {formData.mediaFile ? (
                   <span className="file-name">{formData.mediaFile.name}</span>
+                ) : (
+                  <span className="placeholder">Haz clic para seleccionar archivo</span>
                 )}
               </div>
             </div>
           )}
+
+          <div className="settings-row">
+            <div className="input-group">
+              <label>Retraso entre mensajes (ms)</label>
+              <input
+                type="number"
+                name="delayBetweenMessages"
+                min="500"
+                max="30000"
+                step="500"
+                value={formData.delayBetweenMessages}
+                onChange={handleInputChange}
+                className="input-number"
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Máximo concurrentes</label>
+              <input
+                type="number"
+                name="maxConcurrent"
+                min="1"
+                max="20"
+                value={formData.maxConcurrent}
+                onChange={handleInputChange}
+                className="input-number"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      {result && (
+      {error && (
+        <div className="error-alert">
+          <FaExclamation />
+          <p>{error}</p>
+        </div>
+      )}
+
+      {sending && (
+        <div className="progress-container">
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{
+                width: `${(progress.current / progress.total) * 100}%`,
+              }}
+            />
+          </div>
+          <p className="progress-text">
+            <FaSpinner className="spinner" />
+            Enviando... {progress.current} de {progress.total}
+          </p>
+        </div>
+      )}
+
+      {result && !sending && (
         <div className={`result-alert ${result.failed === 0 ? 'success' : 'partial'}`}>
           <div className="alert-content">
             {result.failed === 0 ? (
               <>
                 <FaCheck className="alert-icon" />
-                <p>✓ Todos los mensajes se enviaron correctamente</p>
+                <p>✓ Todos los {result.successful} mensajes se enviaron correctamente</p>
               </>
             ) : (
               <>
                 <FaExclamation className="alert-icon" />
-                <p>{result.success} enviados, {result.failed} fallidos</p>
+                <p>{result.successful} enviados, {result.failed} fallidos</p>
               </>
             )}
           </div>

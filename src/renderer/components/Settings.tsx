@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FaSave, FaCheck } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaSave, FaCheck, FaEnvelope, FaUsers, FaHistory } from 'react-icons/fa';
 import './Settings.css';
 
 interface SettingsState {
@@ -22,6 +22,48 @@ const Settings: React.FC = () => {
   });
 
   const [saved, setSaved] = useState(false);
+  const [stats, setStats] = useState({ sent: 0, failed: 0, pending: 0 });
+  const [totalContacts, setTotalContacts] = useState(0);
+
+  useEffect(() => {
+    loadSettings();
+    loadStats();
+  }, []);
+
+  const loadSettings = () => {
+    const saved = localStorage.getItem('wa-sender-settings');
+    if (saved) {
+      try {
+        setSettings(JSON.parse(saved));
+      } catch (error) {
+        console.error('Error loading settings:', error);
+      }
+    }
+  };
+
+  const loadStats = async () => {
+    try {
+      const messageStats = await window.electron.ipc.invoke('messages:get-stats');
+      if (messageStats.success) {
+        const statsMap = messageStats.data.reduce((acc: any, item: any) => {
+          acc[item.status] = item.count;
+          return acc;
+        }, {});
+        setStats({
+          sent: statsMap.sent || 0,
+          failed: statsMap.failed || 0,
+          pending: statsMap.pending || 0,
+        });
+      }
+
+      const contacts = await window.electron.ipc.invoke('contacts:get-all');
+      if (contacts.success) {
+        setTotalContacts(contacts.data.length);
+      }
+    } catch (error) {
+      console.error('Error loading stats:', error);
+    }
+  };
 
   const handleChange = (key: keyof SettingsState, value: any) => {
     setSettings(prev => ({
@@ -30,14 +72,13 @@ const Settings: React.FC = () => {
     }));
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     try {
-      // TODO: Implementar guardado en base de datos
-      await new Promise(resolve => setTimeout(resolve, 500));
+      localStorage.setItem('wa-sender-settings', JSON.stringify(settings));
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (error) {
-      console.error('Error al guardar configuración:', error);
+      console.error('Error saving settings:', error);
     }
   };
 
@@ -47,7 +88,7 @@ const Settings: React.FC = () => {
 
       <div className="settings-grid">
         <div className="settings-card">
-          <h3>Envío de Mensajes</h3>
+          <h3>⚙️ Envío de Mensajes</h3>
 
           <div className="setting-item">
             <label>
@@ -100,7 +141,7 @@ const Settings: React.FC = () => {
         </div>
 
         <div className="settings-card">
-          <h3>Interfaz y Notificaciones</h3>
+          <h3>🎨 Interfaz y Notificaciones</h3>
 
           <div className="setting-item">
             <label>
@@ -124,27 +165,52 @@ const Settings: React.FC = () => {
               <option value="dark">Oscuro</option>
             </select>
           </div>
-        </div>
 
-        <div className="settings-card info-card">
-          <h3>Información de la Aplicación</h3>
-          <div className="info-list">
-            <div className="info-item">
+          <div className="setting-item info-box">
+            <div className="info-item-row">
               <span className="label">Versión:</span>
               <span className="value">1.0.0</span>
             </div>
-            <div className="info-item">
-              <span className="label">Estado:</span>
-              <span className="value status">Conectado</span>
+          </div>
+        </div>
+
+        <div className="settings-card stats-card">
+          <h3>📊 Estadísticas</h3>
+
+          <div className="stats-grid">
+            <div className="stat-item sent">
+              <div className="stat-icon">
+                <FaEnvelope />
+              </div>
+              <div className="stat-content">
+                <p className="stat-label">Enviados</p>
+                <p className="stat-number">{stats.sent}</p>
+              </div>
             </div>
-            <div className="info-item">
-              <span className="label">Contactos:</span>
-              <span className="value">25</span>
+
+            <div className="stat-item failed">
+              <div className="stat-icon">
+                <FaHistory />
+              </div>
+              <div className="stat-content">
+                <p className="stat-label">Fallidos</p>
+                <p className="stat-number">{stats.failed}</p>
+              </div>
             </div>
-            <div className="info-item">
-              <span className="label">Grupos:</span>
-              <span className="value">5</span>
+
+            <div className="stat-item contacts">
+              <div className="stat-icon">
+                <FaUsers />
+              </div>
+              <div className="stat-content">
+                <p className="stat-label">Contactos</p>
+                <p className="stat-number">{totalContacts}</p>
+              </div>
             </div>
+          </div>
+
+          <div className="stat-total">
+            <p>Total procesado: <strong>{stats.sent + stats.failed}</strong></p>
           </div>
         </div>
       </div>
@@ -160,6 +226,9 @@ const Settings: React.FC = () => {
         <button onClick={handleSave} className="btn-save">
           <FaSave />
           Guardar Configuración
+        </button>
+        <button onClick={loadStats} className="btn-refresh">
+          Actualizar Estadísticas
         </button>
       </div>
     </div>
