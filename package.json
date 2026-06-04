@@ -1,0 +1,72 @@
+{
+  "name": "wa-sender",
+  "version": "1.0.0",
+  "description": "Aplicación de escritorio para envío masivo de mensajes por WhatsApp",
+  "main": "src/main/main.ts",
+  "homepage": "./",
+  "author": "WA-Sender Dev",
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently \"npm run electron\" \"npm run react\"",
+    "react": "react-scripts start",
+    "react-build": "react-scripts build",
+    "electron": "wait-on http://localhost:3000 && electron .",
+    "electron-dev": "electron .",
+    "build": "npm run react-build && electron-builder",
+    "dev": "concurrently \"npm run react\" \"cross-env NODE_ENV=development electron .\"",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "electron-squirrel-startup": "^1.1.0",
+    "whatsapp-web.js": "^1.25.0",
+    "axios": "^1.6.0",
+    "sqlite3": "^5.1.6",
+    "uuid": "^9.0.0",
+    "xlsx": "^0.18.5",
+    "qrcode.react": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/node": "^20.0.0",
+    "@types/electron": "^1.8.0",
+    "typescript": "^5.0.0",
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.4",
+    "react-scripts": "5.0.1",
+    "concurrently": "^8.2.0",
+    "wait-on": "^7.0.0",
+    "cross-env": "^7.0.3",
+    "tailwindcss": "^3.3.0",
+    "postcss": "^8.4.32",
+    "autoprefixer": "^10.4.16"
+  },
+  "build": {
+    "appId": "com.wa-sender.app",
+    "productName": "WA-Sender",
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "public"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
